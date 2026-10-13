@@ -1,0 +1,55 @@
+{% extends "admin/base_site.html" %}
+
+{% block content %}
+<div id="content-main">
+
+    <div style="margin-bottom: 24px; padding: 16px 20px; background: #14141a; border-left: 4px solid #d4af37; border-radius: 6px; color: #f5f5f7;">
+        <h2 style="margin: 0 0 6px; color: #d4af37;">Active subscribers</h2>
+        <p style="margin: 0; color: #c8c8d2; font-size: 0.9rem;">
+            <strong style="color: #f5f5f7; font-size: 1.1rem;">{{ total }}</strong>
+            subscriber{{ total|pluralize }} currently active as of {{ today|date:"F j, Y" }}.
+        </p>
+    </div>
+
+    {% if subs %}
+        <table style="width: 100%; background: #14141a; border-collapse: collapse; border-radius: 6px; overflow: hidden;">
+            <thead>
+                <tr style="background: #1b1b23;">
+                    <th style="padding: 14px 16px; text-align: left; color: #d4af37; font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase;">User</th>
+                    <th style="padding: 14px 16px; text-align: left; color: #d4af37; font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase;">Email</th>
+                    <th style="padding: 14px 16px; text-align: left; color: #d4af37; font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase;">Plan</th>
+                    <th style="padding: 14px 16px; text-align: left; color: #d4af37; font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase;">Expires</th>
+                    <th style="padding: 14px 16px; text-align: right; color: #d4af37; font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase;">Days left</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for sub in subs %}
+                    <tr style="border-top: 1px solid rgba(255,255,255,0.06);">
+                        <td style="padding: 14px 16px; color: #f5f5f7;">
+                            <a href="{% url 'admin:subscriptions_subscription_change' sub.pk %}" style="color: #f5f5f7; text-decoration: none; font-weight: 600;">
+                                {{ sub.user.username }}
+                            </a>
+                        </td>
+                        <td style="padding: 14px 16px; color: #c8c8d2; font-size: 0.9rem;">{{ sub.user.email|default:"—" }}</td>
+                        <td style="padding: 14px 16px; color: #c8c8d2; font-size: 0.9rem;">{{ sub.plan.name }}</td>
+                        <td style="padding: 14px 16px; color: #c8c8d2; font-size: 0.9rem; font-variant-numeric: tabular-nums;">{{ sub.expiry_date|date:"M j, Y" }}</td>
+                        <td style="padding: 14px 16px; color: #d4af37; text-align: right; font-weight: 700; font-variant-numeric: tabular-nums;">{{ sub.days_remaining }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <div style="padding: 40px 24px; background: #14141a; border: 1px dashed rgba(255,255,255,0.1); border-radius: 6px; text-align: center; color: #83838f;">
+            <p style="margin: 0; font-size: 1rem;">No active subscribers yet.</p>
+        </div>
+    {% endif %}
+
+    <p style="margin-top: 24px;">
+        <a href="{% url 'admin:subscriptions_subscription_add' %}" style="display: inline-block; padding: 10px 18px; background: linear-gradient(135deg, #d4af37, #b8941f); color: #0a0a0b; border-radius: 8px; font-weight: 700; text-decoration: none;">
+            + Add subscription manually
+        </a>
+        <a href="/admin/" style="margin-left: 12px; color: #c8c8d2;">← Back to admin</a>
+    </p>
+
+</div>
+{% endblock %}

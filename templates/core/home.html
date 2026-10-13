@@ -1,0 +1,467 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ site_name }} — Daily Manual Betting Codes & Predictions{% endblock %}
+
+{% block meta_description %}2SURE publishes daily hand-picked betting codes with fully transparent win/loss records. Subscribe to unlock today's premium pick. Results shown honestly. 18+.{% endblock %}
+
+{% block og_title %}2SURE — Daily Betting Codes, Chosen By Hand{% endblock %}
+
+{% block og_description %}See today's pick, our full 30-day record, and subscribe in 30 seconds. No guaranteed wins, no hidden losses.{% endblock %}
+
+{% block content %}
+
+<!-- ===================== HERO ===================== -->
+<section class="hero hero-home">
+    <div class="hero-bg" aria-hidden="true"></div>
+    <div class="hero-overlay" aria-hidden="true"></div>
+
+    <div class="container hero-content">
+        <div class="hero-inner">
+
+            <div class="hero-copy">
+                <span class="eyebrow">
+                    <span class="pulse"></span>
+                    Live · Updated {{ today|date:"F j, Y" }}
+                </span>
+
+                <h1>
+                    Daily betting codes,<br>
+                    <span class="gold-text">selected by professionls.</span>
+                </h1>
+
+                <p class="hero-sub">
+                    Every pick is personally chosen and published before kickoff.
+                    No algorithms. No auto-generated noise. Just the codes we
+                    would place ourselves  with every result shown, win or lose.
+                </p>
+
+                <div class="hero-actions">
+                    <a href="{% url 'subscriptions:pricing' %}" class="btn btn-primary btn-lg">
+                        Unlock today's code
+                        <span class="btn-arrow">→</span>
+                    </a>
+                    <a href="{% url 'betting:results' %}" class="btn btn-secondary btn-lg">
+                        See the full record
+                    </a>
+                </div>
+
+                <div class="hero-meta">
+                    <span>🔒 Codes never appear in page source</span>
+                    <span>·</span>
+                    <span>18+ · Play responsibly</span>
+                </div>
+            </div>
+
+            <div class="hero-figure">
+                <img src="{% static 'img/footballer.png' %}" alt="" class="hero-footballer" aria-hidden="true">
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<!-- ===================== TRUST STRIP ===================== -->
+<section class="trust-bar">
+    <div class="container trust-bar-inner">
+        <div class="trust-pill">
+            <span class="trust-icon">◆</span>
+            <div>
+                <strong>{{ stats.total_published }}</strong>
+                <span>picks published</span>
+            </div>
+        </div>
+        <div class="trust-pill">
+            <span class="trust-icon">◆</span>
+            <div>
+                <strong>{{ stats.win_rate }}%</strong>
+                <span>win rate, last 30 days</span>
+            </div>
+        </div>
+        <div class="trust-pill">
+            <span class="trust-icon">◆</span>
+            <div>
+                <strong>{{ stats.last_30_days }}</strong>
+                <span>picks in last 30 days</span>
+            </div>
+        </div>
+        <div class="trust-pill">
+            <span class="trust-icon">◆</span>
+            <div>
+                <strong>100%</strong>
+                <span>results shown, win or lose</span>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- ===================== SUBSCRIBER COUNT ===================== -->
+{% if subscriber_count %}
+<section class="subscriber-strip">
+    <div class="container">
+        <div class="subscriber-inner">
+            <div class="subscriber-dot"></div>
+            <div class="subscriber-text">
+                <span class="subscriber-number">{{ subscriber_count }}</span>
+                <span class="subscriber-label">
+                    {% if site_settings_label %}{{ site_settings_label }}{% else %}active subscribers{% endif %}
+                </span>
+            </div>
+            <p class="subscriber-note">
+                Join them — subscribe today and unlock today's code.
+            </p>
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- ===================== TODAY'S PICKS ===================== -->
+<section class="section">
+    <div class="container">
+        <div class="section-head">
+            <div>
+                <span class="kicker">Today · {{ today|date:"F j, Y" }}</span>
+                <h2 class="section-title">Today's <span class="gold-text">Picks</span></h2>
+                <p class="section-sub">
+                    Codes are hidden on the page  not just visually, but on the server.
+                    You cannot find them in the HTML source. That's the point.
+                </p>
+            </div>
+            <a href="{% url 'betting:picks' %}" class="section-link">See all picks →</a>
+        </div>
+
+        <div class="picks-grid">
+            {% for pick in todays_picks %}
+                <article class="pick-card">
+                    <div class="pick-card-top">
+                        <span class="pick-date">{{ pick.pick_date|date:"M j" }}</span>
+                        {% if pick.result == 'won' %}
+                            <span class="status status-won">Won</span>
+                        {% elif pick.result == 'lost' %}
+                            <span class="status status-lost">Lost</span>
+                        {% else %}
+                            <span class="status status-pending">Pending</span>
+                        {% endif %}
+                    </div>
+
+                    <h3 class="pick-title">{{ pick.title }}</h3>
+
+                    {% if pick.description %}
+                        <p class="pick-desc">{{ pick.description }}</p>
+                    {% endif %}
+
+                    <div class="pick-odds-row">
+                        <span class="pick-meta-label">Total odds</span>
+                        <span class="odds-value">{{ pick.odds }}</span>
+                    </div>
+
+                    <div class="code-locked">
+                        <span class="lock-icon">🔒</span>
+                        <span>Premium code — subscribers only</span>
+                    </div>
+
+                    <a href="{% url 'subscriptions:pricing' %}" class="btn btn-primary pick-btn">Unlock this code</a>
+                </article>
+            {% empty %}
+                <div class="empty-state">
+                    <div class="empty-icon">◆</div>
+                    <h3>No pick published yet today</h3>
+                    <p>Today's selection will appear here once it's released. Subscribers get notified the moment it drops.</p>
+                    <a href="{% url 'subscriptions:pricing' %}" class="btn btn-primary">Get notified — subscribe</a>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- ===================== BETTING PLATFORMS ===================== -->
+{% if platforms %}
+<section class="section platforms-section">
+    <div class="container">
+
+        <div class="section-head">
+            <div>
+                <span class="kicker">Where to bet</span>
+                <h2 class="section-title">Trusted <span class="gold-text">betting platforms</span></h2>
+                <p class="section-sub">
+                    Place today's code with any of these bookmakers. We work with each one 
+                    all links below are ours, and help support the site at no extra cost to you.
+                </p>
+            </div>
+        </div>
+
+        <div class="platforms-grid">
+            {% for platform in platforms %}
+                <a href="{{ platform.url }}"
+                   target="_blank"
+                   rel="noopener sponsored"
+                   class="platform-card {% if platform.is_featured %}platform-featured{% endif %}">
+
+                    {% if platform.is_featured %}
+                        <span class="platform-badge">Top pick</span>
+                    {% endif %}
+
+                    <div class="platform-logo-wrap">
+                        {% if platform.logo %}
+                            <img src="{{ platform.logo.url }}" alt="{{ platform.name }}" class="platform-logo">
+                        {% else %}
+                            <div class="platform-logo-placeholder">{{ platform.name|slice:":2"|upper }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="platform-body">
+                        <h3 class="platform-name">{{ platform.name }}</h3>
+                        {% if platform.description %}
+                            <p class="platform-desc">{{ platform.description }}</p>
+                        {% endif %}
+                        {% if platform.bonus_note %}
+                            <span class="platform-bonus">{{ platform.bonus_note }}</span>
+                        {% endif %}
+                    </div>
+
+                    <span class="platform-cta">
+                        Bet now
+                        <span class="platform-arrow">→</span>
+                    </span>
+                </a>
+            {% endfor %}
+        </div>
+
+        <p class="platforms-disclaimer">
+            These are third-party betting platforms. {{ site_name }} is not responsible
+            for their services, odds, or payouts. 18+  gamble responsibly.
+        </p>
+
+    </div>
+</section>
+{% endif %}
+
+<!-- ===================== 30-DAY LIVE RESULTS ===================== -->
+<section class="section section-alt live-record-section">
+    <div class="container">
+
+        <div class="section-head">
+            <div>
+                <span class="kicker">
+                    <span class="live-dot"></span>
+                    Live · Updated as picks settle
+                </span>
+                <h2 class="section-title">The last <span class="gold-text">30 days</span>, in full</h2>
+                <p class="section-sub">
+                    Every pick we've published in the last 30 days. Once a pick settles,
+                    its code is revealed here  win or lose. Nothing hidden, nothing filtered.
+                </p>
+            </div>
+            <a href="{% url 'betting:results' %}" class="section-link">Full results history →</a>
+        </div>
+
+        <!-- Summary stats -->
+        <div class="live-record-summary">
+            <div class="live-stat">
+                <span class="live-stat-num">{{ stats.last_30_days }}</span>
+                <span class="live-stat-lbl">Total picks</span>
+            </div>
+            <div class="live-stat live-stat-won">
+                <span class="live-stat-num">{{ stats.won_30 }}</span>
+                <span class="live-stat-lbl">Won</span>
+            </div>
+            <div class="live-stat live-stat-lost">
+                <span class="live-stat-num">{{ stats.lost_30 }}</span>
+                <span class="live-stat-lbl">Lost</span>
+            </div>
+            <div class="live-stat live-stat-pending">
+                <span class="live-stat-num">{{ stats.pending_30 }}</span>
+                <span class="live-stat-lbl">Pending</span>
+            </div>
+            <div class="live-stat live-stat-rate">
+                <span class="live-stat-num">{{ stats.win_rate }}%</span>
+                <span class="live-stat-lbl">Win rate</span>
+            </div>
+        </div>
+
+        <!-- Filter chips -->
+        <div class="live-record-filters" role="tablist">
+            <button class="chip chip-active" data-filter="all" type="button">All</button>
+            <button class="chip" data-filter="won" type="button">Won</button>
+            <button class="chip" data-filter="lost" type="button">Lost</button>
+            <button class="chip" data-filter="pending" type="button">Pending</button>
+        </div>
+
+        <!-- The table -->
+        {% if thirty_day_picks %}
+            <div class="live-record-table-wrap">
+                <div class="live-record-table" id="live-record-table">
+                    <div class="live-record-head">
+                        <span>Date</span>
+                        <span>Day</span>
+                        <span>Pick</span>
+                        <span>Code</span>
+                        <span class="text-right">Odds</span>
+                        <span class="text-right">Result</span>
+                    </div>
+
+                    {% for pick in thirty_day_picks %}
+                        <div class="live-record-row" data-result="{{ pick.result }}">
+                            <span class="lr-date">{{ pick.pick_date|date:"M j, Y" }}</span>
+                            <span class="lr-day">{{ pick.pick_date|date:"l" }}</span>
+                            <span class="lr-pick">
+                                {{ pick.title }}
+                                {% if pick.description %}
+                                    <em class="lr-desc">{{ pick.description }}</em>
+                                {% endif %}
+                            </span>
+
+                            <span class="lr-code">
+                                {% if pick.result == 'pending' %}
+                                    <span class="lr-code-locked">🔒 Subscribers only</span>
+                                {% else %}
+                                    <span class="lr-code-revealed">{{ pick.code }}</span>
+                                {% endif %}
+                            </span>
+
+                            <span class="lr-odds">{{ pick.odds }}</span>
+
+                            <span class="text-right">
+                                {% if pick.result == 'won' %}
+                                    <span class="status status-won">Won</span>
+                                {% elif pick.result == 'lost' %}
+                                    <span class="status status-lost">Lost</span>
+                                {% else %}
+                                    <span class="status status-pending">Pending</span>
+                                {% endif %}
+                            </span>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <p class="live-record-note">
+                <strong>Live table.</strong> Codes are revealed automatically the moment
+                a pick is settled  Won or Lost. Pending picks stay locked until kickoff ends.
+                This page reflects the state of the record in real time.
+            </p>
+        {% else %}
+            <div class="empty-state">
+                <div class="empty-icon">◆</div>
+                <h3>No picks in the last 30 days</h3>
+                <p>Once picks are published and settled, they'll appear here automatically.</p>
+            </div>
+        {% endif %}
+
+    </div>
+</section>
+
+<!-- ===================== HOW IT WORKS ===================== -->
+<section class="section section-alt">
+    <div class="container">
+        <span class="kicker">The process</span>
+        <h2 class="section-title">How <span class="gold-text">{{ site_name }}</span> works</h2>
+        <p class="section-sub">Three steps. No ambiguity.</p>
+
+        <div class="steps-grid">
+            <div class="step-card">
+                <div class="step-num">01</div>
+                <h3>We publish a code</h3>
+                <p>A single, hand-picked selection is added to the site each day — usually before the first kickoff. Odds and description are shown publicly.</p>
+            </div>
+            <div class="step-card">
+                <div class="step-num">02</div>
+                <h3>Subscribers unlock it</h3>
+                <p>The actual betting code is stored server-side. Only active subscribers can retrieve it — it never ships to non-subscribers' browsers.</p>
+            </div>
+            <div class="step-card">
+                <div class="step-num">03</div>
+                <h3>Result is posted honestly</h3>
+                <p>When the matches finish, the pick is marked Won or Lost. Both are shown on the results page. We don't hide the losses.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===================== PRICING TEASER ===================== -->
+<section class="section section-alt">
+    <div class="container">
+        <div class="cta-panel">
+            <div class="cta-panel-left">
+                <span class="kicker">Membership</span>
+                <h2>One subscription.<br><span class="gold-text">Every code, every day.</span></h2>
+                <p>
+                    Weekly, monthly, or three months. Cancel any time.
+                    No hidden fees, no auto-renewal traps.
+                </p>
+                <ul class="cta-list">
+                    <li>Every daily pick, unlocked instantly</li>
+                    <li>Full results history</li>
+                    <li>Server-protected codes — never visible to non-subscribers</li>
+                    <li>Cancel whenever you like</li>
+                </ul>
+            </div>
+            <div class="cta-panel-right">
+                <a href="{% url 'subscriptions:pricing' %}" class="btn btn-primary btn-lg" style="width:100%;">
+                    See subscription plans →
+                </a>
+                <p class="cta-note">
+                    Prices shown on the pricing page. No signup required to browse.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===================== FAQ ===================== -->
+<section class="section">
+    <div class="container">
+        <span class="kicker">Questions</span>
+        <h2 class="section-title">Common <span class="gold-text">questions</span></h2>
+
+        <div class="faq">
+            <details class="faq-item">
+                <summary>Are the picks guaranteed to win?</summary>
+                <p>No. Nobody can guarantee a betting outcome, and anyone who claims otherwise is not being honest with you. Our picks are selections we would place ourselves — nothing more. You should only bet what you can afford to lose.</p>
+            </details>
+
+            <details class="faq-item">
+                <summary>How do I receive the codes?</summary>
+                <p>Once subscribed, log in and open today's pick. The full betting code is displayed for you and can be copied with a single click. Codes are retrieved from our server — they are never sent to non-subscribers' browsers.</p>
+            </details>
+
+            <details class="faq-item">
+                <summary>What sports and leagues do you cover?</summary>
+                <p>Mostly football, across a range of leagues. Occasionally we include other sports when a strong selection appears. Each pick shows its description before you unlock it, so you always know what you're getting.</p>
+            </details>
+
+            <details class="faq-item">
+                <summary>Can I see the results before subscribing?</summary>
+                <p>Yes. The <a href="{% url 'betting:results' %}">results page</a> is public and unfiltered. It shows wins, losses, and pending picks in full. We would rather earn your trust with a real record than a curated one.</p>
+            </details>
+
+            <details class="faq-item">
+                <summary>How do I cancel?</summary>
+                <p>Subscriptions run for their chosen period and auto renew but you can cancel anytime.</p>
+            </details>
+
+            <details class="faq-item">
+                <summary>Is this available outside Nigeria?</summary>
+                <p>Yes, though payment options and legal requirements vary by country. You're responsible for ensuring betting is legal where you live before subscribing.</p>
+            </details>
+        </div>
+    </div>
+</section>
+
+<!-- ===================== FINAL CTA ===================== -->
+<section class="section final-cta">
+    <div class="container" style="text-align:center;">
+        <h2>Today's code is already live.</h2>
+        <p class="section-sub" style="margin-left:auto; margin-right:auto;">
+            Subscribe once and unlock every pick from here forward.
+        </p>
+        <div style="display:flex; gap:14px; justify-content:center; flex-wrap:wrap; margin-top:24px;">
+            <a href="{% url 'subscriptions:pricing' %}" class="btn btn-primary btn-lg">Subscribe now →</a>
+            <a href="{% url 'betting:results' %}" class="btn btn-secondary btn-lg">Check the record first</a>
+        </div>
+        <p class="final-cta-note">
+            18+ · Gambling involves risk · Past results do not predict future outcomes
+        </p>
+    </div>
+</section>
+
+{% endblock %}

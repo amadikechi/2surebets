@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block title %}Email confirmation — {{ site_name }}{% endblock %}
+
+{% block content %}
+<section class="section auth-section">
+    <div class="container">
+        <div class="auth-card" style="text-align:center;">
+            {% if status == 'verified' %}
+                <div style="font-size:2.4rem; margin-bottom:14px;">✓</div>
+                <h1 class="auth-title">Email <span class="gold-text">confirmed</span></h1>
+                <p class="auth-sub">Welcome, {{ user.username }}. Your account is now active.</p>
+                <a href="{% url 'accounts:login' %}" class="btn btn-primary btn-lg" style="width:100%; margin-top:20px;">Sign in →</a>
+            {% elif status == 'already' %}
+                <div style="font-size:2.4rem; margin-bottom:14px;">✓</div>
+                <h1 class="auth-title">Already <span class="gold-text">confirmed</span></h1>
+                <p class="auth-sub">This email has already been verified.</p>
+                <a href="{% url 'accounts:login' %}" class="btn btn-primary btn-lg" style="width:100%; margin-top:20px;">Sign in →</a>
+            {% elif status == 'expired' %}
+                <div style="font-size:2.4rem; margin-bottom:14px;">⚠️</div>
+                <h1 class="auth-title">Link <span class="gold-text">expired</span></h1>
+                <p class="auth-sub">This confirmation link has expired.</p>
+                <a href="{% url 'accounts:login' %}" class="btn btn-primary btn-lg" style="width:100%; margin-top:20px;">Sign in →</a>
+            {% else %}
+                <div style="font-size:2.4rem; margin-bottom:14px;">⚠️</div>
+                <h1 class="auth-title">Invalid <span class="gold-text">link</span></h1>
+                <p class="auth-sub">This confirmation link is not valid.</p>
+                <a href="{% url 'accounts:login' %}" class="btn btn-primary btn-lg" style="width:100%; margin-top:20px;">Sign in →</a>
+            {% endif %}
+        </div>
+    </div>
+</section>
+{% endblock %}

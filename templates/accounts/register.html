@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+
+{% block title %}Create account — {{ site_name }}{% endblock %}
+
+{% block content %}
+
+<section class="section auth-section">
+    <div class="container">
+        <div class="auth-card">
+            <div class="auth-header">
+                <span class="kicker">Join {{ site_name }}</span>
+                <h1 class="auth-title">Create your <span class="gold-text">account</span></h1>
+                <p class="auth-sub">Unlock daily picks in under a minute.</p>
+            </div>
+
+            <form method="post" novalidate class="auth-form">
+                {% csrf_token %}
+
+                {% if form.non_field_errors %}
+                    <div class="form-error-box">
+                        {% for error in form.non_field_errors %}{{ error }}{% endfor %}
+                    </div>
+                {% endif %}
+
+                <div class="form-field">
+                    <label for="{{ form.username.id_for_label }}">Username</label>
+                    {{ form.username }}
+                    {% if form.username.errors %}
+                        <div class="form-error">{{ form.username.errors.0 }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="form-field">
+                    <label for="{{ form.email.id_for_label }}">Email</label>
+                    {{ form.email }}
+                    {% if form.email.errors %}
+                        <div class="form-error">{{ form.email.errors.0 }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="form-field">
+                    <label for="{{ form.password1.id_for_label }}">Password</label>
+                    {{ form.password1 }}
+                    {% if form.password1.errors %}
+                        <div class="form-error">{{ form.password1.errors.0 }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="form-field">
+                    <label for="{{ form.password2.id_for_label }}">Confirm password</label>
+                    {{ form.password2 }}
+                    {% if form.password2.errors %}
+                        <div class="form-error">{{ form.password2.errors.0 }}</div>
+                    {% endif %}
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-lg auth-submit">
+                    Create account →
+                </button>
+
+                <p class="auth-alt">
+                    Already have an account?
+                    <a href="{% url 'accounts:login' %}">Sign in</a>
+                </p>
+            </form>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

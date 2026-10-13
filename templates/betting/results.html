@@ -1,0 +1,142 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Betting Results & Full Record — {{ site_name }}{% endblock %}
+
+{% block meta_description %}Complete, unfiltered record of every 2SUREbets pick. Wins and losses both shown. Filter by date range or result.{% endblock %}
+
+{% block content %}
+
+<section class="section" style="padding-top: 60px;">
+    <div class="container">
+
+        <span class="kicker">Track record</span>
+        <h1 style="font-size: clamp(2rem, 4vw, 3rem);">The full <span class="gold-text">results</span> history</h1>
+        <p class="section-sub" style="max-width: 640px; margin-bottom: 40px;">
+            Every pick we've published — wins and losses both. Filter by result or date range.
+            Numbers update the moment a pick is settled.
+        </p>
+
+        <!-- ============== STATS ============== -->
+        <div class="record-grid">
+            <div class="record-card">
+                <span class="record-num">{{ stats.total }}</span>
+                <span class="record-lbl">Total picks</span>
+            </div>
+            <div class="record-card record-won">
+                <span class="record-num">{{ stats.won }}</span>
+                <span class="record-lbl">Won</span>
+            </div>
+            <div class="record-card record-lost">
+                <span class="record-num">{{ stats.lost }}</span>
+                <span class="record-lbl">Lost</span>
+            </div>
+            <div class="record-card record-pending">
+                <span class="record-num">{{ stats.pending }}</span>
+                <span class="record-lbl">Pending</span>
+            </div>
+        </div>
+
+        <div class="results-summary">
+            <div class="summary-item">
+                <span class="summary-label">Win rate</span>
+                <span class="summary-value gold-text">{{ stats.win_rate }}%</span>
+            </div>
+            <div class="summary-item">
+                <span class="summary-label">Average odds</span>
+                <span class="summary-value">{{ stats.avg_odds|default:"—" }}</span>
+            </div>
+        </div>
+
+        <!-- ============== FILTERS ============== -->
+        <div class="filters">
+            <div class="filter-group">
+                <span class="filter-label">Result</span>
+                <div class="filter-chips">
+                    <a href="?result=all&range={{ range_filter }}"
+                       class="chip {% if result_filter == 'all' %}chip-active{% endif %}">All</a>
+                    <a href="?result=won&range={{ range_filter }}"
+                       class="chip {% if result_filter == 'won' %}chip-active{% endif %}">Won</a>
+                    <a href="?result=lost&range={{ range_filter }}"
+                       class="chip {% if result_filter == 'lost' %}chip-active{% endif %}">Lost</a>
+                    <a href="?result=pending&range={{ range_filter }}"
+                       class="chip {% if result_filter == 'pending' %}chip-active{% endif %}">Pending</a>
+                </div>
+            </div>
+
+            <div class="filter-group">
+                <span class="filter-label">Period</span>
+                <div class="filter-chips">
+                    <a href="?result={{ result_filter }}&range=7"
+                       class="chip {% if range_filter == '7' %}chip-active{% endif %}">7 days</a>
+                    <a href="?result={{ result_filter }}&range=30"
+                       class="chip {% if range_filter == '30' %}chip-active{% endif %}">30 days</a>
+                    <a href="?result={{ result_filter }}&range=90"
+                       class="chip {% if range_filter == '90' %}chip-active{% endif %}">90 days</a>
+                    <a href="?result={{ result_filter }}&range=month"
+                       class="chip {% if range_filter == 'month' %}chip-active{% endif %}">This month</a>
+                    <a href="?result={{ result_filter }}&range=all"
+                       class="chip {% if range_filter == 'all' %}chip-active{% endif %}">All time</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============== RESULTS TABLE ============== -->
+        {% if picks %}
+            <div class="results-table">
+                <div class="results-head">
+                    <span>Date</span>
+                    <span>Pick</span>
+                    <span class="text-right">Odds</span>
+                    <span class="text-right">Result</span>
+                </div>
+
+                {% for pick in picks %}
+                    <div class="results-row">
+                        <span class="results-date">{{ pick.pick_date|date:"M j, Y" }}</span>
+                        <span class="results-title">
+                            {{ pick.title }}
+                            {% if pick.description %}
+                                <em class="results-desc">{{ pick.description }}</em>
+                            {% endif %}
+                        </span>
+                        <span class="results-odds">{{ pick.odds }}</span>
+                        <span class="text-right">
+                            {% if pick.result == 'won' %}
+                                <span class="status status-won">Won</span>
+                            {% elif pick.result == 'lost' %}
+                                <span class="status status-lost">Lost</span>
+                            {% else %}
+                                <span class="status status-pending">Pending</span>
+                            {% endif %}
+                        </span>
+                    </div>
+                {% endfor %}
+            </div>
+
+            <p class="results-note">
+                Showing <strong>{{ picks|length }}</strong> pick{{ picks|length|pluralize }}.
+                Losing picks are never hidden.
+            </p>
+        {% else %}
+            <div class="empty-state">
+                <div class="empty-icon">◆</div>
+                <h3>No picks match these filters</h3>
+                <p>Try a wider date range or set the result filter to "All".</p>
+                <a href="?result=all&range=all" class="btn btn-primary">Show all results</a>
+            </div>
+        {% endif %}
+
+        <!-- ============== CTA ============== -->
+        <div class="results-cta">
+            <div>
+                <h3>Want today's code?</h3>
+                <p>Subscribe to unlock the current pick — every plan is cancel-anytime.</p>
+            </div>
+            <a href="{% url 'subscriptions:pricing' %}" class="btn btn-primary">See plans →</a>
+        </div>
+
+    </div>
+</section>
+
+{% endblock %}

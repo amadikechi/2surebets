@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+{% block meta_robots %}noindex, follow{% endblock %}
+
+{% block title %}Terms of Service — {{ site_name }}{% endblock %}
+
+{% block meta_description %}Terms of service for {{ site_name }}.{% endblock %}
+
+{% block content %}
+
+<section class="section" style="padding-top: 60px;">
+    <div class="container">
+
+        <div class="content-narrow">
+            <span class="kicker">Legal</span>
+            <h1 style="font-size: clamp(2rem, 4.5vw, 3rem);">
+                Terms of <span class="gold-text">Service</span>
+            </h1>
+            <p class="content-lead">Last updated: {% now "F j, Y" %}</p>
+        </div>
+
+        <div class="content-narrow content-legal">
+            <h2>1. About these terms</h2>
+            <p>
+                These terms govern your use of {{ site_domain }} ("the site"). By accessing or using
+                the site, you agree to be bound by them. If you do not agree, please do not use the site.
+            </p>
+
+            <h2>2. Eligibility</h2>
+            <p>
+                You must be at least 18 years old to use this site. It is your responsibility to ensure
+                that accessing betting-related content is legal in your jurisdiction.
+            </p>
+
+            <h2>3. Nature of the service</h2>
+            <p>
+                {{ site_name }} publishes betting selections ("picks") for informational and
+                entertainment purposes. We do not place bets on your behalf. We do not have any
+                relationship with the bookmakers you choose to use.
+            </p>
+
+            <h2>4. No guarantee of outcomes</h2>
+            <p>
+                All betting involves risk. Past results do not indicate future outcomes.
+                We make no guarantee — explicit or implied — that any pick will win.
+                You are solely responsible for any bets you place and any money you stake.
+            </p>
+
+            <h2>5. Subscriptions</h2>
+            <p> 
+                Subscriptions are prepaid for the stated period (weekly, monthly, or three months) and
+                we auto-renew.Never worry about manually renewing your subscription again. Our Auto-Renewal feature automatically renews your plan when it expires, so you can continue enjoying uninterrupted access to our premium services without having to remember your renewal date.. Refunds are provided where required by applicable law; otherwise,
+                subscriptions are non-refundable.
+            </p>
+
+            <h2>6. Acceptable use</h2>
+            <p>
+                You agree not to redistribute premium codes, share your account, scrape the site,
+                or use automated tools to access content. Accounts found doing so may be terminated
+                without refund.
+            </p>
+
+            <h2>7. Responsible gambling</h2>
+            <p>
+                Gambling should be entertainment, not a source of income. Never bet more than
+                you can afford to lose. If you believe you have a gambling problem, please seek
+                help from a licensed support organisation in your country.
+            </p>
+
+            <h2>8. Limitation of liability</h2>
+            <p>
+                To the maximum extent permitted by law, {{ site_name }} shall not be liable for any
+                direct, indirect, incidental, or consequential loss arising from your use of the site
+                or any betting decisions you make based on content published here.
+            </p>
+
+            <h2>9. Changes</h2>
+            <p>
+                We may update these terms from time to time. Continued use of the site after
+                changes are posted constitutes acceptance of the revised terms.
+            </p>
+
+            <h2>10. Contact</h2>
+            <p>
+                Questions about these terms may be sent to
+                <a href="mailto:{{ site_support_email }}">{{ site_support_email }}</a>.
+            </p>
+        </div>
+
+    </div>
+</section>
+
+{% endblock %}

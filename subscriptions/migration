@@ -1,0 +1,60 @@
+from django.db import migrations
+
+
+PLANS = [
+    {
+        'name': 'Weekly',
+        'slug': 'weekly',
+        'duration': 'weekly',
+        'price': 1500,
+        'currency': 'NGN',
+        'description': 'Perfect for trying us out.',
+        'is_featured': False,
+        'sort_order': 1,
+    },
+    {
+        'name': 'Monthly',
+        'slug': 'monthly',
+        'duration': 'monthly',
+        'price': 5000,
+        'currency': 'NGN',
+        'description': 'The most popular choice.',
+        'is_featured': True,
+        'sort_order': 2,
+    },
+    {
+        'name': '3 Months',
+        'slug': '3-months',
+        'duration': 'quarterly',
+        'price': 13500,
+        'currency': 'NGN',
+        'description': 'Best value — save 10%.',
+        'is_featured': False,
+        'sort_order': 3,
+    },
+]
+
+
+def create_plans(apps, schema_editor):
+    SubscriptionPlan = apps.get_model('subscriptions', 'SubscriptionPlan')
+    for plan in PLANS:
+        SubscriptionPlan.objects.update_or_create(
+            slug=plan['slug'],
+            defaults=plan,
+        )
+
+
+def remove_plans(apps, schema_editor):
+    SubscriptionPlan = apps.get_model('subscriptions', 'SubscriptionPlan')
+    SubscriptionPlan.objects.filter(slug__in=[p['slug'] for p in PLANS]).delete()
+
+
+class Migration(migrations.Migration):
+
+    dependencies = [
+        ('subscriptions', '0001_initial'),
+    ]
+
+    operations = [
+        migrations.RunPython(create_plans, remove_plans),
+    ]

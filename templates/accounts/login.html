@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% block title %}Sign in — {{ site_name }}{% endblock %}
+
+{% block content %}
+
+<section class="section auth-section">
+    <div class="container">
+        <div class="auth-card">
+            <div class="auth-header">
+                <span class="kicker">{{ site_name }}</span>
+                <h1 class="auth-title">Welcome <span class="gold-text">back</span></h1>
+                <p class="auth-sub">Sign in to access today's premium picks.</p>
+            </div>
+
+            <form method="post" novalidate class="auth-form">
+                {% csrf_token %}
+
+                {% if form.errors %}
+                    <div class="form-error-box">
+                        Invalid username or password.
+                    </div>
+                {% endif %}
+
+                                <div class="form-field">
+                    <label for="{{ form.password.id_for_label }}">Password</label>
+                    {{ form.password }}
+                    <a href="{% url 'accounts:password_reset' %}"
+                       style="font-size:0.8rem; color:var(--gold-300); align-self:flex-end; margin-top:6px;">
+                        Forgot password?
+                    </a>
+                </div>
+
+                <div class="form-field">
+                    <label for="{{ form.password.id_for_label }}">Password</label>
+                    {{ form.password }}
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-lg auth-submit">
+                    Sign in →
+                </button>
+
+                <p class="auth-alt">
+                    Don't have an account?
+                    <a href="{% url 'accounts:register' %}">Create one</a>
+                </p>
+            </form>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

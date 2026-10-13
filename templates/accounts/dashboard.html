@@ -1,0 +1,158 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard — {{ site_name }}{% endblock %}
+
+{% block content %}
+
+<section class="section" style="padding-top: 60px;">
+    <div class="container">
+
+        <div class="dash-header">
+            <div>
+                <span class="kicker">Your account</span>
+                <h1 class="dash-title">
+                    Welcome, <span class="gold-text">{{ user.username }}</span>
+                </h1>
+                <p class="dash-sub">
+                    Signed in as {{ user.email|default:user.username }}.
+                </p>
+            </div>
+
+            <form method="post" action="{% url 'accounts:logout' %}" style="margin:0;">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-secondary">Sign out</button>
+            </form>
+        </div>
+
+        <!-- ============== SUBSCRIPTION STATUS ============== -->
+        {% if subscription %}
+            <div class="subscription-card {% if subscription.is_valid %}sub-active{% else %}sub-inactive{% endif %}">
+                <div class="sub-row">
+                    <div>
+                        <span class="sub-label">Plan</span>
+                        <span class="sub-value">{{ subscription.plan.name }}</span>
+                    </div>
+                    <div>
+                        <span class="sub-label">Status</span>
+                        <span class="sub-value">
+                            {% if subscription.is_valid %}
+                                <span class="status status-won">Active</span>
+                            {% elif subscription.status == 'cancelled' %}
+                                <span class="status status-lost">Cancelled</span>
+                            {% else %}
+                                <span class="status status-pending">Expired</span>
+                            {% endif %}
+                        </span>
+                    </div>
+                    <div>
+                        <span class="sub-label">Expires</span>
+                        <span class="sub-value">{{ subscription.expiry_date|date:"F j, Y" }}</span>
+                    </div>
+                    <div>
+                        <span class="sub-label">Days left</span>
+                        <span class="sub-value gold-text">{{ subscription.days_remaining }}</span>
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            <div class="subscription-card sub-inactive">
+                <div class="sub-row">
+                    <div>
+                        <span class="sub-label">Plan</span>
+                        <span class="sub-value">—</span>
+                    </div>
+                    <div>
+                        <span class="sub-label">Status</span>
+                        <span class="sub-value">
+                            <span class="status status-pending">No subscription</span>
+                        </span>
+                    </div>
+                    <div>
+                        <span class="sub-label">Expires</span>
+                        <span class="sub-value">—</span>
+                    </div>
+                    <div>
+                        <span class="sub-label">Days left</span>
+                        <span class="sub-value">—</span>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+
+        <!-- ============== TODAY'S PREMIUM CODE ============== -->
+        <div class="dashboard-pick">
+
+            <div class="dashboard-pick-head">
+                <div>
+                    <span class="kicker">
+                        {% if todays_pick %}
+                            Pick for {{ todays_pick.pick_date|date:"F j, Y" }}
+                        {% else %}
+                            No pick available
+                        {% endif %}
+                    </span>
+                    <h2 class="dashboard-pick-title">
+                        {% if todays_pick %}{{ todays_pick.title }}{% else %}Check back shortly{% endif %}
+                    </h2>
+                    {% if todays_pick.description %}
+                        <p class="dashboard-pick-desc">{{ todays_pick.description }}</p>
+                    {% endif %}
+                </div>
+
+                {% if todays_pick %}
+                    {% if todays_pick.result == 'won' %}
+                        <span class="status status-won">Won</span>
+                    {% elif todays_pick.result == 'lost' %}
+                        <span class="status status-lost">Lost</span>
+                    {% else %}
+                        <span class="status status-pending">Pending</span>
+                    {% endif %}
+                {% endif %}
+            </div>
+
+            {% if todays_pick %}
+                <div class="dashboard-pick-odds">
+                    <span class="pick-meta-label">Total odds</span>
+                    <span class="odds-value">{{ todays_pick.odds }}</span>
+                </div>
+
+                {% if unlocked_code %}
+                    <!-- ============ UNLOCKED ============ -->
+                    <div class="code-unlocked">
+                        <div class="code-unlocked-label">Your premium code</div>
+                        <div class="code-value" id="premium-code">{{ unlocked_code }}</div>
+                        <button class="btn btn-primary code-copy-btn" data-copy="{{ unlocked_code }}" type="button">
+                            📋 Copy code
+                        </button>
+                    </div>
+                {% else %}
+                    <!-- ============ LOCKED ============ -->
+                    <div class="code-locked-big">
+                        <div class="lock-icon-big">🔒</div>
+                        <h3>Premium code locked</h3>
+                        {% if subscription and not subscription.is_valid %}
+                            <p>Your subscription has expired. Renew to unlock today's code.</p>
+                        {% elif subscription and subscription.status == 'cancelled' %}
+                            <p>Your subscription was cancelled. Subscribe again to unlock today's code.</p>
+                        {% else %}
+                            <p>Subscribe to unlock today's premium code.</p>
+                        {% endif %}
+                        <a href="{% url 'subscriptions:pricing' %}" class="btn btn-primary btn-lg">
+                            See subscription plans →
+                        </a>
+                    </div>
+                {% endif %}
+            {% else %}
+                <div class="code-locked-big">
+                    <div class="lock-icon-big">◆</div>
+                    <h3>No pick published yet</h3>
+                    <p>Today's selection will appear here once it's released.</p>
+                </div>
+            {% endif %}
+
+        </div>
+
+    </div>
+</section>
+
+{% endblock %}

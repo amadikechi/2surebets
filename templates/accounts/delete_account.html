@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% block title %}Delete account — {{ site_name }}{% endblock %}
+
+{% block content %}
+
+<section class="section auth-section">
+    <div class="container">
+        <div class="auth-card" style="text-align:center; max-width:540px;">
+            <div class="auth-header">
+                <div style="font-size:2.4rem; margin-bottom:14px;">⚠️</div>
+                <h1 class="auth-title">Delete your <span class="gold-text">account</span></h1>
+                <p class="auth-sub">
+                    This will permanently delete:
+                </p>
+            </div>
+
+            <ul style="text-align:left; display:inline-block; color:var(--silver-300); font-size:0.92rem; line-height:1.9; margin:0 0 26px; padding-left:22px;">
+                <li>Your account and login credentials</li>
+                <li>Your subscription history</li>
+                <li>Your notification preferences</li>
+                <li>All data associated with this account</li>
+            </ul>
+
+            <p style="color:var(--silver-300); font-size:0.92rem; margin:0 0 26px;">
+                <strong style="color:var(--danger);">This cannot be undone.</strong>
+            </p>
+
+            <form method="post" style="display:flex; flex-direction:column; gap:12px;">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger btn-lg" style="width:100%;">
+                    Yes, delete my account
+                </button>
+                <a href="{% url 'accounts:profile' %}" class="btn btn-secondary btn-lg" style="width:100%;">
+                    Cancel
+                </a>
+            </form>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

@@ -1,0 +1,45 @@
+{% load static %}
+<footer class="site-footer">
+    <div class="container">
+        <div class="footer-grid">
+            <div class="footer-brand">
+                <a href="/" class="logo">
+                    <img src="{% static 'img/logo.png' %}" alt="{{ site_name }}" class="logo-img">
+                    <span class="logo-text">
+                        <span class="dim">2</span><span class="accent">SUREBETS</span>
+                    </span>
+                </a>
+                <p>{{ site_name }} provides daily manually selected betting codes for subscribers. Every pick is published with transparent results — wins and losses shown.</p>
+            </div>
+
+            <div class="footer-col">
+                <h4>Explore</h4>
+                <ul>
+                    <li><a href="{% url 'core:home' %}">Home</a></li>
+                    <li><a href="{% url 'betting:picks' %}">Today's Picks</a></li>
+                    <li><a href="{% url 'betting:results' %}">Results</a></li>
+                    <li><a href="{% url 'subscriptions:pricing' %}">Pricing</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h4>Company</h4>
+                <ul>
+                    <li><a href="{% url 'core:about' %}">About</a></li>
+                    <li><a href="{% url 'core:contact' %}">Contact</a></li>
+                    <li><a href="{% url 'core:terms' %}">Terms</a></li>
+                    <li><a href="{% url 'core:privacy' %}">Privacy</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="responsible">
+            <strong>18+</strong> · Gambling involves risk. Picks are selections, not guarantees. Only gamble what you can afford to lose.
+        </div>
+
+        <div class="footer-bottom">
+            <span>&copy; {% now "Y" %} {{ site_name }} — {{ site_domain }}</span>
+            <span>Responsible gambling. Play responsibly.</span>
+        </div>
+    </div>
+</footer>

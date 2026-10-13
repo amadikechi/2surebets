@@ -1,0 +1,66 @@
+{% load static %}
+<header class="site-header" id="site-header">
+    <div class="container nav">
+        <a href="/" class="logo">
+            <img src="{% static 'img/logo.png' %}" alt="{{ site_name }}" class="logo-img">
+            <span class="logo-text">
+                <span class="dim">2</span><span class="accent">SUREBETS</span>
+            </span>
+        </a>
+
+        <!-- Desktop nav -->
+        <ul class="nav-links">
+            <li><a href="{% url 'core:home' %}">Home</a></li>
+            <li><a href="{% url 'betting:picks' %}">Today's Picks</a></li>
+            <li><a href="{% url 'betting:results' %}">Results</a></li>
+            <li><a href="{% url 'subscriptions:pricing' %}">Pricing</a></li>
+            <li><a href="{% url 'core:about' %}">About</a></li>
+        </ul>
+
+        <div class="nav-actions">
+            {% if user.is_authenticated %}
+                <a href="{% url 'accounts:dashboard' %}" class="nav-link-quiet">Dashboard</a>
+                <a href="{% url 'accounts:profile' %}" class="nav-link-quiet">Profile</a>
+                <form method="post" action="{% url 'accounts:logout' %}" style="display:inline; margin:0;">
+                    {% csrf_token %}
+                    <button type="submit" class="nav-cta">SIGN OUT</button>
+                </form>
+            {% else %}
+                <a href="{% url 'accounts:login' %}" class="nav-link-quiet">Sign in</a>
+                <a href="{% url 'accounts:register' %}" class="nav-cta">SUBSCRIBE</a>
+            {% endif %}
+
+            <button class="hamburger" id="hamburger" aria-label="Toggle menu" aria-expanded="false" aria-controls="mobile-menu" type="button">
+                <span class="hamburger-line"></span>
+                <span class="hamburger-line"></span>
+                <span class="hamburger-line"></span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Mobile slide-down menu -->
+    <nav class="mobile-menu" id="mobile-menu" aria-hidden="true">
+        <ul class="mobile-menu-links">
+            <li><a href="{% url 'core:home' %}">Home</a></li>
+            <li><a href="{% url 'betting:picks' %}">Today's Picks</a></li>
+            <li><a href="{% url 'betting:results' %}">Results</a></li>
+            <li><a href="{% url 'subscriptions:pricing' %}">Pricing</a></li>
+            <li><a href="{% url 'core:about' %}">About</a></li>
+            <li><a href="{% url 'core:contact' %}">Contact</a></li>
+        </ul>
+
+        <div class="mobile-menu-actions">
+            {% if user.is_authenticated %}
+                <a href="{% url 'accounts:dashboard' %}" class="btn btn-secondary" style="width:100%;">Dashboard</a>
+                <a href="{% url 'accounts:profile' %}" class="btn btn-secondary" style="width:100%;">Profile</a>
+                <form method="post" action="{% url 'accounts:logout' %}" style="width:100%; margin:0;">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-primary" style="width:100%;">Sign out</button>
+                </form>
+            {% else %}
+                <a href="{% url 'accounts:login' %}" class="btn btn-secondary" style="width:100%;">Sign in</a>
+                <a href="{% url 'accounts:register' %}" class="btn btn-primary" style="width:100%;">Subscribe</a>
+            {% endif %}
+        </div>
+    </nav>
+</header>

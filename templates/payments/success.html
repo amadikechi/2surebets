@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Payment successful — {{ site_name }}{% endblock %}
+{% block meta_robots %}noindex, nofollow{% endblock %}
+
+{% block content %}
+
+<section class="section auth-section">
+    <div class="container">
+        <div class="auth-card" style="text-align:center; max-width:540px;">
+            <div style="font-size:3rem; margin-bottom:16px;">✓</div>
+            <h1 class="auth-title">Payment <span class="gold-text">successful</span></h1>
+            <p class="auth-sub" style="margin-bottom:22px;">
+                Your subscription is now active. Today's premium code is unlocked.
+            </p>
+
+            {% if subscription %}
+                <div style="padding:18px; background:rgba(34,197,94,0.06); border:1px solid rgba(34,197,94,0.25); border-radius:var(--radius-md); margin-bottom:26px; text-align:left;">
+                    <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
+                        <span style="color:var(--silver-500); font-size:0.82rem;">Plan</span>
+                        <span style="color:var(--silver-100); font-weight:600;">{{ subscription.plan.name }}</span>
+                    </div>
+                    <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
+                        <span style="color:var(--silver-500); font-size:0.82rem;">Amount</span>
+                        <span style="color:var(--gold-400); font-weight:600;">{{ payment.currency }} {{ payment.amount }}</span>
+                    </div>
+                    <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
+                        <span style="color:var(--silver-500); font-size:0.82rem;">Expires</span>
+                        <span style="color:var(--silver-100); font-weight:600;">{{ subscription.expiry_date|date:"F j, Y" }}</span>
+                    </div>
+                    <div style="display:flex; justify-content:space-between;">
+                        <span style="color:var(--silver-500); font-size:0.82rem;">Reference</span>
+                        <span style="color:var(--silver-100); font-family:monospace; font-size:0.8rem;">{{ payment.reference }}</span>
+                    </div>
+                </div>
+            {% endif %}
+
+            <a href="{% url 'accounts:dashboard' %}" class="btn btn-primary btn-lg" style="width:100%;">
+                Go to dashboard →
+            </a>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

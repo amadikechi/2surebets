@@ -1,0 +1,156 @@
+{% extends 'base.html' %}
+
+{% block title %}Profile — {{ site_name }}{% endblock %}
+
+{% block content %}
+
+<section class="section" style="padding-top: 60px;">
+    <div class="container">
+
+        <div class="dash-header">
+            <div>
+                <span class="kicker">Your account</span>
+                <h1 class="dash-title">
+                    Profile <span class="gold-text">settings</span>
+                </h1>
+                <p class="dash-sub">Manage your details and notification preferences.</p>
+            </div>
+            <a href="{% url 'accounts:dashboard' %}" class="btn btn-secondary">← Dashboard</a>
+        </div>
+
+        <!-- ============== SUBSCRIPTION SNAPSHOT ============== -->
+        {% if subscription %}
+            <div class="subscription-card {% if subscription.is_valid %}sub-active{% else %}sub-inactive{% endif %}" style="margin-bottom:30px;">
+                <div class="sub-row">
+                    <div>
+                        <span class="sub-label">Plan</span>
+                        <span class="sub-value">{{ subscription.plan.name }}</span>
+                    </div>
+                    <div>
+                        <span class="sub-label">Status</span>
+                        <span class="sub-value">
+                            {% if subscription.is_valid %}
+                                <span class="status status-won">Active</span>
+                            {% else %}
+                                <span class="status status-pending">Expired</span>
+                            {% endif %}
+                        </span>
+                    </div>
+                    <div>
+                        <span class="sub-label">Expires</span>
+                        <span class="sub-value">{{ subscription.expiry_date|date:"F j, Y" }}</span>
+                    </div>
+                    <div>
+                        <span class="sub-label">Days left</span>
+                        <span class="sub-value gold-text">{{ subscription.days_remaining }}</span>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+
+        <!-- ============== FORM ============== -->
+        <form method="post" novalidate>
+            {% csrf_token %}
+
+            <div class="profile-grid">
+
+                <!-- Account details -->
+                <div class="profile-panel">
+                    <h2 class="profile-panel-title">Account details</h2>
+                    <p class="profile-panel-sub">Your login email and display name.</p>
+
+                    <div class="form-field">
+                        <label>Username</label>
+                        <input type="text" class="form-input" value="{{ user.username }}" disabled>
+                        <div class="form-hint">Usernames can't be changed.</div>
+                    </div>
+
+                    <div class="form-field">
+                        <label for="{{ user_form.email.id_for_label }}">Email address</label>
+                        {{ user_form.email }}
+                        {% if user_form.email.errors %}
+                            <div class="form-error">{{ user_form.email.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-row-2">
+                        <div class="form-field">
+                            <label for="{{ user_form.first_name.id_for_label }}">First name</label>
+                            {{ user_form.first_name }}
+                        </div>
+                        <div class="form-field">
+                            <label for="{{ user_form.last_name.id_for_label }}">Last name</label>
+                            {{ user_form.last_name }}
+                        </div>
+                    </div>
+
+                    <div style="margin-top:20px;">
+                        <a href="{% url 'accounts:password_reset' %}" class="section-link">
+                            Change password →
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Notifications -->
+                <div class="profile-panel">
+                    <h2 class="profile-panel-title">Notifications</h2>
+                    <p class="profile-panel-sub">Choose how we reach you.</p>
+
+                    <div class="form-field">
+                        <label for="{{ profile_form.phone_number.id_for_label }}">Phone number</label>
+                        {{ profile_form.phone_number }}
+                        {% if profile_form.phone_number.errors %}
+                            <div class="form-error">{{ profile_form.phone_number.errors.0 }}</div>
+                        {% endif %}
+                        <div class="form-hint">E.164 format, e.g. +2348012345678. Optional.</div>
+                    </div>
+
+                    <div class="toggle-row">
+                        <div>
+                            <span class="toggle-label">Email updates</span>
+                            <span class="toggle-desc">Get notified when new codes are published.</span>
+                        </div>
+                        <label class="toggle">
+                            {{ profile_form.email_notifications }}
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+
+                    <div class="toggle-row">
+                        <div>
+                            <span class="toggle-label">WhatsApp updates</span>
+                            <span class="toggle-desc">Coming soon. Add your number above to be ready.</span>
+                        </div>
+                        <label class="toggle">
+                            {{ profile_form.whatsapp_notifications }}
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="profile-actions">
+                <button type="submit" class="btn btn-primary btn-lg">Save changes</button>
+                <a href="{% url 'accounts:dashboard' %}" class="btn btn-secondary btn-lg">Cancel</a>
+            </div>
+        </form>
+
+        <!-- ============== DANGER ZONE ============== -->
+        <div class="danger-zone">
+            <div>
+                <h3 class="danger-title">Delete account</h3>
+                <p class="danger-desc">
+                    Permanently remove your account and all associated data.
+                    This cannot be undone.
+                </p>
+            </div>
+            <a href="{% url 'accounts:delete_account' %}" class="btn btn-danger">
+                Delete account
+            </a>
+        </div>
+
+    </div>
+</section>
+
+{% endblock %}

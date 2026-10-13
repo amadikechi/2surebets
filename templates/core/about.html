@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}About {{ site_name }} — How Our Picks Are Made{% endblock %}
+
+{% block meta_description %}Who's behind 2SUREbets, how we choose daily betting codes, and why we show every loss alongside every win.{% endblock %}
+
+{% block content %}
+
+<section class="section" style="padding-top: 60px;">
+    <div class="container">
+
+        <div class="content-narrow">
+            <span class="kicker">About</span>
+            <h1 style="font-size: clamp(2rem, 4.5vw, 3rem);">
+                Who's behind <span class="gold-text">{{ site_name }}</span>
+            </h1>
+            <p class="content-lead">
+                {{ site_name }} is a small, independent operation. We publish one or two
+                hand-selected betting picks per day, and nothing else. No filler, 
+                auto-generated lists, no paywalled "premium VIP" upsells.
+            </p>
+        </div>
+
+        <div class="content-narrow">
+            <h2>How picks are chosen</h2>
+            <p>
+                Every selection is made by hand. We look at fixtures, form, injuries,
+                and odds across a small set of leagues we know well. When nothing
+                looks worth it, we don't publish — a quiet day is better than a forced pick.
+            </p>
+
+            <h2>Why we show losses</h2>
+            <p>
+                Our <a href="{% url 'betting:results' %}">results page</a> shows every pick we've ever
+                published, including the ones that lost. Some betting sites only show winners. We
+                don't. A record with losses is a real record. A record without them is a lie.
+            </p>
+
+            <h2>What we don't do</h2>
+            <ul>
+                <li>We don't claim to have a "system" that beats the bookmakers.</li>
+                <li>We don't sell "guaranteed wins" or promise any specific outcome.</li>
+                <li>We don't run fake countdown timers or invented scarcity.</li>
+                <li>We don't hide losing picks from the public record.</li>
+            </ul>
+
+            <h2>What we do</h2>
+            <ul>
+                <li>We research and pick carefully, and publish what we'd back ourselves.</li>
+                <li>We charge a simple subscription and we auto-renew you.</li>
+                <li>We treat our subscribers like adults.</li>
+                <li>We show you the good and the bad.</li>
+            </ul>
+
+            <div class="responsible" style="margin-top: 40px;">
+                <strong>18+</strong> · Gambling involves risk. Betting should be entertainment, not income.
+                Never bet money you cannot afford to lose. If gambling stops being fun,
+                <a href="https://www.begambleaware.org/" target="_blank" rel="noopener" style="color: var(--gold-300);">seek support</a>.
+            </div>
+        </div>
+
+    </div>
+</section>
+
+{% endblock %}

@@ -1,0 +1,179 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Today's Betting Picks — {{ site_name }}{% endblock %}
+
+{% block meta_description %}Today's published picks from 2SUREbets — odds, times, and results. Codes are unlocked for subscribers.{% endblock %}
+
+{% block content %}
+
+<!-- ===================== HERO ===================== -->
+<section class="section picks-hero" style="padding-top: 60px;">
+    <div class="container">
+
+        <div class="picks-hero-inner">
+            <div>
+                <span class="kicker">Today · {{ today|date:"F j, Y" }}</span>
+                <h1 style="font-size: clamp(2rem, 4.5vw, 3.2rem);">
+                    Today's <span class="gold-text">picks</span>
+                </h1>
+                <p class="section-sub" style="max-width: 620px; margin-bottom: 0;">
+                    Every pick we publish is shown here dates, odds, and results.
+                    The betting code itself is unlocked only for subscribers.
+                    Losing picks stay on the record permanently.
+                </p>
+            </div>
+
+            <div class="picks-hero-cta">
+                <a href="{% url 'subscriptions:pricing' %}" class="btn btn-primary btn-lg" style="width:100%;">
+                    Unlock today's code →
+                </a>
+                <p class="picks-hero-note">Cancel any time.  auto-renewal.</p>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<!-- ===================== TODAY'S PICKS ===================== -->
+<section class="section" style="padding-top: 20px;">
+    <div class="container">
+
+        <div class="section-head">
+            <div>
+                <span class="kicker">Live now</span>
+                <h2 class="section-title">Published <span class="gold-text">today</span></h2>
+            </div>
+            {% if user.is_authenticated %}
+                <a href="{% url 'accounts:dashboard' %}" class="section-link">Go to dashboard →</a>
+            {% else %}
+                <a href="{% url 'accounts:login' %}" class="section-link">Already subscribed? Sign in →</a>
+            {% endif %}
+        </div>
+
+        {% if todays_picks %}
+            <div class="picks-grid">
+                {% for pick in todays_picks %}
+                    <article class="pick-card">
+                        <div class="pick-card-top">
+                            <span class="pick-date">{{ pick.pick_date|date:"M j" }}</span>
+                            {% if pick.result == 'won' %}
+                                <span class="status status-won">Won</span>
+                            {% elif pick.result == 'lost' %}
+                                <span class="status status-lost">Lost</span>
+                            {% else %}
+                                <span class="status status-pending">Pending</span>
+                            {% endif %}
+                        </div>
+
+                        <h3 class="pick-title">{{ pick.title }}</h3>
+
+                        {% if pick.description %}
+                            <p class="pick-desc">{{ pick.description }}</p>
+                        {% endif %}
+
+                        <div class="pick-odds-row">
+                            <span class="pick-meta-label">Total odds</span>
+                            <span class="odds-value">{{ pick.odds }}</span>
+                        </div>
+
+                        <div class="code-locked">🔒 PREMIUM CODE — SUBSCRIBE TO UNLOCK</div>
+
+                        <a href="{% url 'subscriptions:pricing' %}" class="btn btn-primary pick-btn">
+                            Unlock this code
+                        </a>
+                    </article>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="empty-state">
+                <div class="empty-icon">◆</div>
+                <h3>No pick published yet today</h3>
+                <p>Picks are usually released before the first kickoff. Subscribers get the code the moment it goes live.</p>
+                <a href="{% url 'subscriptions:pricing' %}" class="btn btn-primary">Get notified — subscribe</a>
+            </div>
+        {% endif %}
+
+    </div>
+</section>
+
+<!-- ===================== RECENT HISTORY ===================== -->
+<section class="section section-alt">
+    <div class="container">
+
+        <div class="section-head">
+            <div>
+                <span class="kicker">Recent history</span>
+                <h2 class="section-title">The last <span class="gold-text">50 picks</span></h2>
+                <p class="section-sub">Settled picks and pending ones — no filtering, no omissions.</p>
+            </div>
+            <a href="{% url 'betting:results' %}" class="section-link">Full results page →</a>
+        </div>
+
+        <div class="results-table">
+            <div class="results-head">
+                <span>Date</span>
+                <span>Pick</span>
+                <span class="text-right">Odds</span>
+                <span class="text-right">Result</span>
+            </div>
+
+            {% for pick in recent_picks %}
+                <div class="results-row">
+                    <span class="results-date">{{ pick.pick_date|date:"M j, Y" }}</span>
+                    <span class="results-title">
+                        {{ pick.title }}
+                        {% if pick.description %}
+                            <em class="results-desc">{{ pick.description }}</em>
+                        {% endif %}
+                    </span>
+                    <span class="results-odds">{{ pick.odds }}</span>
+                    <span class="text-right">
+                        {% if pick.result == 'won' %}
+                            <span class="status status-won">Won</span>
+                        {% elif pick.result == 'lost' %}
+                            <span class="status status-lost">Lost</span>
+                        {% else %}
+                            <span class="status status-pending">Pending</span>
+                        {% endif %}
+                    </span>
+                </div>
+            {% empty %}
+                <div class="results-row" style="grid-template-columns: 1fr; text-align: center; padding: 40px 20px;">
+                    <span style="color: var(--silver-500);">No picks published yet.</span>
+                </div>
+            {% endfor %}
+        </div>
+
+    </div>
+</section>
+
+<!-- ===================== CTA ===================== -->
+<section class="section">
+    <div class="container">
+        <div class="cta-panel">
+            <div class="cta-panel-left">
+                <span class="kicker">Ready when you are</span>
+                <h2>See a pick you like?<br><span class="gold-text">Unlock every code.</span></h2>
+                <p>
+                    One subscription gives you the actual betting code for every pick — today's,
+                    tomorrow's, and everything after. Cancel anytime.
+                </p>
+                <ul class="cta-list">
+                    <li>Every daily pick, unlocked instantly</li>
+                    <li>Codes protected on the server — never visible to non-subscribers</li>
+                    <li>Full results history, wins and losses</li>
+                    <li> auto-renewal</li>
+                </ul>
+            </div>
+            <div class="cta-panel-right">
+                <a href="{% url 'subscriptions:pricing' %}" class="btn btn-primary btn-lg" style="width:100%;">
+                    See subscription plans →
+                </a>
+                <p class="cta-note">Prices shown on the pricing page. No signup required to browse.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}
